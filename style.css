@@ -9,7 +9,7 @@ body {
 h1 {
     text-align: center;
     margin-top: 20px;
-    color: white; /* Ensure text is visible on the background */
+    color: rgb(20, 19, 19); /* Ensure text is visible on the background */
 }
 
 .container {
