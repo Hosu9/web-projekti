@@ -15,11 +15,11 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: black;
-  min-height: 500px;
 }
 
 .content {
   padding: 20px;
+  min-height: 300px;
 }
 
 /* FRONT PAGE */
@@ -108,6 +108,24 @@ body {
   gap: 20px;
   padding: 10px;
   flex-direction: row;
+}
+
+/* FOOTER */
+.footer {
+  height: 120px;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  display: flex;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+  font-size: 12px;
+  color: #707070;
 }
 
 /* SCORE KEEPER */
