@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Navbar } from "./navbar";
+import { Footer } from "./footer";
 
 interface Props {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ export const Layout = ({ children }: Props) => {
     <div className="container">
       <Navbar />
       <div className="content">{children}</div>
+      <Footer />
     </div>
   );
 };
