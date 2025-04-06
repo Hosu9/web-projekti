@@ -4,6 +4,7 @@
 
 import React, { useState } from "react";
 import { Button } from "../components/button";
+import { Layout } from "../components/layout";
 
 const BowlingRules = () => {
   const [language, setLanguage] = useState("EN");
@@ -14,19 +15,21 @@ const BowlingRules = () => {
   };
 
   return (
-    <div
-      style={{
-        marginTop: "20px",
-        padding: "15px",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-      }}
-    >
-      <h2>Bowling Rules</h2>
-      <Button onClick={() => setLanguage("en")} value="EN English" />
-      <Button onClick={() => setLanguage("fi")} value="FI Suomi" />
-      <p>{rules[language]}</p>
-    </div>
+    <Layout>
+      <div
+        style={{
+          marginTop: "20px",
+          padding: "15px",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+        }}
+      >
+        <h2>Bowling Rules</h2>
+        <Button onClick={() => setLanguage("en")} value="EN English" />
+        <Button onClick={() => setLanguage("fi")} value="FI Suomi" />
+        <p>{rules[language]}</p>
+      </div>
+    </Layout>
   );
 };
 
