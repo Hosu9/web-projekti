@@ -6,6 +6,21 @@ body {
   background-size: cover; /* Ensure the image covers the entire background */
 }
 
+/* LAYOUT */
+
+.container {
+  max-width: 850px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.9); /* Add transparency to the container */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.content {
+  padding: 20px;
+}
+
 /* FRONT PAGE */
 
 .frontpage {
@@ -13,22 +28,86 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
-  /* Created with: https://cssgradient.io/ */
-  background: rgb(16, 15, 30);
-  background: linear-gradient(
-    99deg,
-    rgba(16, 15, 30, 0.969625350140056) 0%,
-    rgba(22, 31, 47, 0.969625350140056) 85%
-  );
 }
 
-.frontpage h1 {
-  color: #fff;
+.fp-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 850px;
+  width: 100%;
+  height: 500px;
+  border-radius: 8px;
+}
+
+.home-header {
+  margin-top: 40px;
 }
 
 .frontpage a {
-  color: white;
+  text-decoration: none;
+}
+
+/* NAVBAR */
+
+.nav {
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-container a {
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav .active,
+.nav li:hover {
+  -webkit-box-shadow: 0 8px 6px -6px #ff5722;
+  -moz-box-shadow: 0 8px 6px -6px #ff5722;
+  box-shadow: 0 4px 8px -6px #ff5722;
+}
+
+.nav li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 10px;
+  -webkit-box-shadow: 0 5px 6px -6px #222;
+  -moz-box-shadow: 0 5px 6px -6px #222;
+  box-shadow: 0 5px 6px -6px #222;
+}
+
+.nav li a {
+  color: black;
+  display: block;
+  width: 100px;
+  height: 20px;
+  line-height: 20px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  flex-direction: row;
 }
 
 /* SCORE KEEPER */
@@ -37,15 +116,6 @@ h1 {
   text-align: center;
   margin-top: 20px;
   color: rgb(20, 19, 19); /* Ensure text is visible on the background */
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.9); /* Add transparency to the container */
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .player-score {
