@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: url("./src/bowling.jpg") no-repeat center center fixed; /* Add background image */
+  background: url("/src/assets/bowling.jpg") no-repeat center center fixed; /* Add background image */
   background-size: cover; /* Ensure the image covers the entire background */
 }
 
