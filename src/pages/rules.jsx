@@ -1,6 +1,4 @@
-// I moved this out of the score keeper component,
-// because i think this is going to be a separate page (?)
-// lmk if you need help routing it or with anything else in general :) -Karita
+
 import React, {useState} from "react";
 import { Layout } from "../components/layout";
 import { Button } from "../components/button";
@@ -9,8 +7,7 @@ export const Rules = () => {
   const [language, setLanguage] = useState("en");
 
   const rules = {
-    fi: `Keilauksen säännöt:
-
+    fi: `
 • Pelaaja heittää palloa rataa pitkin yrittäen kaataa kaikki 10 keilaa.
 
 • Jokainen ruutu koostuu kahdesta heitosta, joiden tavoitteena on kaataa kaikki keilat.
@@ -40,8 +37,7 @@ export const Rules = () => {
 
 `,
 
-    en: `Bowling Rules:
-
+    en: `
 • A player rolls a ball down the lane trying to knock down all 10 pins.
 
 • Each frame consists of throwing the ball twice to knock down all the pins
@@ -79,9 +75,11 @@ export const Rules = () => {
       <div className="BowlingRules">
         <div className="Rules">
           <h1 className="Rules-header">Bowling rules</h1>
-          <Button onClick={() => setLanguage("en")} className = "rules-en-btn" value="EN English" />
-          <Button onClick={() => setLanguage("fi")} className = "rules-fi-btn" value="FI Suomi" /> 
-          <p style={{ marginTop: "20px", whiteSpace: "pre-line" }}>{rules[language]}</p>
+          <Button onClick={() => setLanguage("en")} className={`rules-en-btn ${language === "en" ? "active" : ""}`} value="EN English" />
+          <Button onClick={() => setLanguage("fi")}  className={`rules-fi-btn ${language === "fi" ? "active" : ""}`} value="FI Suomi" /> 
+          <div className="rules-text-container">
+            <p className="rules-text">{rules[language]}</p>
+          </div>
         </div>
       </div>
     </Layout>
