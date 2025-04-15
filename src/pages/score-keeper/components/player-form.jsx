@@ -17,8 +17,10 @@ const PlayerForm = () => {
       />
       <Button
         onClick={() => {
-          addPlayer(name);
-          setName("");
+          if (name.trim()) {
+            addPlayer(name.trim());
+            setName("");
+          }
         }}
         value="Add Player"
       />

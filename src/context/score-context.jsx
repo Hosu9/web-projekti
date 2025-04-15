@@ -1,4 +1,5 @@
 import React, { useState, createContext, useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const ScoreContext = createContext();
 
@@ -8,11 +9,12 @@ export const ScoreProvider = ({ children }) => {
   const [gameScores, setGameScores] = useState({}); // Store scores for multiple games
 
   const addPlayer = (name) => {
-    if (players.length < 4 && name.trim() !== "") {
-      setPlayers([...players, name]);
-      setScores({ ...scores, [name]: Array(10).fill(0) });
-      setGameScores({ ...gameScores, [name]: [] });
-    }
+    const newPlayer = { id: uuidv4(), name };
+    setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
+    setScores((prevScores) => ({
+      ...prevScores,
+      [newPlayer.id]: Array(10).fill(0),
+    }));
   };
 
   const addFrameScore = (player, frameIndex, score) => {
@@ -26,9 +28,9 @@ export const ScoreProvider = ({ children }) => {
   const resetScores = () => {
     setScores((prevScores) => {
       const resetScores = {};
-      for (const player in prevScores) {
-        resetScores[player] = Array(10).fill(0);
-      }
+      Object.keys(prevScores).forEach((playerId) => {
+        resetScores[playerId] = Array(10).fill(0);
+      });
       return resetScores;
     });
   };
@@ -37,12 +39,12 @@ export const ScoreProvider = ({ children }) => {
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
       for (const player of players) {
-        const totalScore = scores[player].reduce(
+        const totalScore = scores[player.id].reduce(
           (sum, frame) => sum + frame,
           0
         );
-        updatedGameScores[player] = [
-          ...(updatedGameScores[player] || []),
+        updatedGameScores[player.id] = [
+          ...(updatedGameScores[player.id] || []),
           totalScore,
         ];
       }
@@ -53,8 +55,8 @@ export const ScoreProvider = ({ children }) => {
     resetScores();
   };
 
-  const calculateThreeGameAverage = (player) => {
-    const games = gameScores[player] || [];
+  const calculateThreeGameAverage = (playerId) => {
+    const games = gameScores[playerId] || [];
     const total = games.reduce((sum, game) => sum + game, 0);
     return games.length > 0 ? (total / games.length).toFixed(2) : 0;
   };
