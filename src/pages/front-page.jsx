@@ -11,6 +11,7 @@ export const FrontPage = () => {
             <h1>Welcome to the</h1>
             <h1 className="orange-header">Bowling Score Keeper!</h1>
           </div>
+
           <p>
             Here you can keep track of your bowling scores for up to 4 players.
             <br /> <br />
