@@ -13,15 +13,51 @@ export const ScoreProvider = ({ children }) => {
     setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
     setScores((prevScores) => ({
       ...prevScores,
-      [newPlayer.id]: Array(10).fill(0),
+      [newPlayer.id]: Array(10)
+        .fill(null)
+        .map(() => []), // each frame as an empty array
     }));
   };
 
-  const addFrameScore = (player, frameIndex, score) => {
+  const addFrameScore = (playerId, frameIndex, score) => {
     setScores((prevScores) => {
-      const updatedFrames = [...prevScores[player]];
-      updatedFrames[frameIndex] = score;
-      return { ...prevScores, [player]: updatedFrames };
+      const updatedFrames = [...prevScores[playerId]];
+
+      // make sure tha the frame is an array
+      if (!Array.isArray(updatedFrames[frameIndex])) {
+        updatedFrames[frameIndex] = [];
+      }
+
+      // adding the rolls to the frames
+      if (
+        updatedFrames[frameIndex].length < 2 ||
+        (frameIndex === 9 && updatedFrames[frameIndex].length < 3)
+      ) {
+        updatedFrames[frameIndex].push(score);
+      }
+
+      // spare bonus
+      if (
+        frameIndex > 0 &&
+        updatedFrames[frameIndex - 1].length === 2 &&
+        updatedFrames[frameIndex - 1].reduce((sum, roll) => sum + roll, 0) ===
+          10
+      ) {
+        // adding the current roll as a bonus points to the previous frame
+        updatedFrames[frameIndex - 1].push(score);
+      }
+
+      // strike bonus
+      if (
+        frameIndex > 1 &&
+        updatedFrames[frameIndex - 2][0] === 10 &&
+        updatedFrames[frameIndex - 2].length < 3
+      ) {
+        // adding the current roll as a bonus points to the frame two frames ago
+        updatedFrames[frameIndex - 2].push(score);
+      }
+
+      return { ...prevScores, [playerId]: updatedFrames };
     });
   };
 
@@ -29,12 +65,13 @@ export const ScoreProvider = ({ children }) => {
     setScores((prevScores) => {
       const resetScores = {};
       Object.keys(prevScores).forEach((playerId) => {
-        resetScores[playerId] = Array(10).fill(0);
+        resetScores[playerId] = Array(10)
+          .fill(null)
+          .map(() => []); // reset frames as empty arrays
       });
       return resetScores;
     });
   };
-
   const finalizeGame = () => {
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
