@@ -1,1 +1,5 @@
 node_modules
+dist
+
+# Route generation file
+routeTree.gen.ts

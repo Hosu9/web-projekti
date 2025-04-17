@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { useScore } from "../context/Scorecontext.js";
+import { useScore } from "../../../context/score-context.jsx";
 
 const Scoreboard = () => {
-  const { players, scores, addFrameScore, finalizeGame, calculateThreeGameAverage } = useScore();
+  const {
+    players,
+    scores,
+    addFrameScore,
+    finalizeGame,
+    calculateThreeGameAverage,
+  } = useScore();
   const [inputScores, setInputScores] = useState({});
 
   const capitalizeName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
@@ -66,7 +72,9 @@ const Scoreboard = () => {
               </div>
             ))}
           </div>
-          <div>Total: {scores[player].reduce((sum, frame) => sum + frame, 0)}</div>
+          <div>
+            Total: {scores[player].reduce((sum, frame) => sum + frame, 0)}
+          </div>
           <div>Three-Game Average: {calculateThreeGameAverage(player)}</div>
         </div>
       ))}

@@ -37,8 +37,14 @@ export const ScoreProvider = ({ children }) => {
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
       for (const player of players) {
-        const totalScore = scores[player].reduce((sum, frame) => sum + frame, 0);
-        updatedGameScores[player] = [...(updatedGameScores[player] || []), totalScore];
+        const totalScore = scores[player].reduce(
+          (sum, frame) => sum + frame,
+          0
+        );
+        updatedGameScores[player] = [
+          ...(updatedGameScores[player] || []),
+          totalScore,
+        ];
       }
       return updatedGameScores;
     });
