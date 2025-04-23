@@ -8,186 +8,94 @@ const Scoreboard = () => {
     addFrameScore,
     finalizeGame,
     calculateThreeGameAverage,
+    calculateTotalScore,
   } = useScore();
-  const [inputScores, setInputScores] = useState({});
   const [completedRounds, setCompletedRounds] = useState({});
 
-  const capitalizeName = (name) => name.charAt(0).toUpperCase() + name.slice(1);
+  const handleRoll = (playerId, frameIndex, rollValue) => {
+    const frame = scores[playerId][frameIndex] || [];
 
-  const handleInputChange = (playerId, frameIndex, rollIndex, value) => {
-    const score = parseInt(value, 10);
-    if (isNaN(score) || score < 0 || score > 10) {
-      return; // Validate that the score is a number between 0 and 10
+    // total pins in a frame cannot exceed 10
+    if (frameIndex !== 9 && frame.length === 1 && frame[0] + rollValue > 10) {
+      alert("Total pins in a frame cannot exceed 10.");
+      return;
     }
-    setInputScores({
-      ...inputScores,
-      [playerId]: {
-        ...inputScores[playerId],
-        [frameIndex]: {
-          ...(inputScores[playerId]?.[frameIndex] || {}),
-          [rollIndex]: value,
-        },
-      },
-    });
-  };
 
-  const handleSaveScore = (playerId, frameIndex) => {
-    const frameScores = inputScores[playerId]?.[frameIndex];
-    if (frameScores) {
-      const roll1 = parseInt(frameScores[0] || 0, 10);
-      const roll2 = parseInt(frameScores[1] || 0, 10);
+    // add the roll value to the frame
+    addFrameScore(playerId, frameIndex, rollValue);
 
-      // adding first roll if it hasnt been added yet
-      if (!isNaN(roll1) && scores[playerId][frameIndex]?.length < 1) {
-        addFrameScore(playerId, frameIndex, roll1);
-      }
-
-      // adding second roll if the first roll is not a strike and it hasnt been added yet
-      if (
-        !isNaN(roll2) &&
-        roll1 !== 10 &&
-        scores[playerId][frameIndex]?.length < 2
-      ) {
-        addFrameScore(playerId, frameIndex, roll2);
-      }
-
-      // set the round as completed
-      setCompletedRounds((prev) => ({
-        ...prev,
-        [playerId]: {
-          ...prev[playerId],
-          [frameIndex]: true,
-        },
-      }));
-
-      // empty the fields after saving the round
-      setInputScores((prev) => ({
-        ...prev,
-        [playerId]: {
-          ...prev[playerId],
-          [frameIndex]: {},
-        },
-      }));
-    }
-  };
-
-  const handleStrike = (playerId, frameIndex) => {
-    addFrameScore(playerId, frameIndex, 10); // Automatically assign 10 points for a strike
-    setInputScores((prev) => ({
+    // complete the round if the frame is completed
+    setCompletedRounds((prev) => ({
       ...prev,
       [playerId]: {
         ...prev[playerId],
-        [frameIndex]: { 0: "10", 1: "" }, // if the first roll is strike then disable the second roll
+        [frameIndex]:
+          frameIndex === 9
+            ? frame.length + 1 >= 3 ||
+              (frame[0] !== 10 && frame.length + 1 >= 2)
+            : frame[0] === 10 || frame.length + 1 === 2,
       },
     }));
   };
 
-  const renderRoundScores = (playerId) => {
-    return scores[playerId]
-      .map((frame, frameIndex) => {
-        if (frame.length > 0) {
-          return `R${frameIndex + 1}: ${frame.join(", ")}`;
-        }
-        return null;
-      })
-      .filter(Boolean)
-      .join(" | ");
+  const renderFrame = (playerId, frameIndex) => {
+    const frames = scores[playerId] || [];
+    const frame = frames[frameIndex] || [];
+    const isFrameCompleted =
+      completedRounds[playerId]?.[frameIndex] ||
+      (frameIndex === 9 && frame.length >= 3) || // 10th frame logic
+      (frameIndex !== 9 && (frame[0] === 10 || frame.length >= 2)); // regular frame logic
+
+    const totalScore = calculateTotalScore(frames.slice(0, frameIndex + 1));
+
+    // calculate remaining pins for the current frame
+    const remainingPins =
+      frameIndex === 9
+        ? 10 // no limit on the tenth frame
+        : 10 - (frame.reduce((sum, roll) => sum + roll, 0) || 0);
+
+    return (
+      <div key={frameIndex} className="frame">
+        <div className="frame-header">Frame {frameIndex + 1}</div>
+        <div className="frame-scores">
+          {frame.map((roll, index) => (
+            <span key={index} className="roll">
+              {roll}
+            </span>
+          ))}
+        </div>
+        <div className="frame-total">Score: {totalScore}</div>
+        <div className="roll-buttons">
+          {[...Array(11).keys()].slice(1).map((rollValue) => (
+            <button
+              key={rollValue}
+              onClick={() => handleRoll(playerId, frameIndex, rollValue)}
+              disabled={isFrameCompleted || rollValue > remainingPins} // disable buttons if a frame is completed or if the roll would exceed 10 pins
+            >
+              {rollValue}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
   };
-  const calculateTotalScore = (frames) => {
-    let totalScore = 0;
 
-    for (let i = 0; i < frames.length; i++) {
-      const frame = frames[i] || [];
-      const nextFrame = frames[i + 1] || [];
-      const frameAfterNext = frames[i + 2] || [];
-
-      // 10th frame special case
-      if (i === 9) {
-        totalScore += frame.reduce((sum, roll) => sum + (roll || 0), 0);
-        break;
-      }
-
-      // strike
-      if (frame[0] === 10) {
-        totalScore += 10;
-
-        if (nextFrame[0] === 10) {
-          // if the next throw is also a strike, add 10 + the first roll of the frame after next
-          totalScore += 10 + (frameAfterNext[0] || 0);
-        } else {
-          // if not, add the next two rolls
-          totalScore += (nextFrame[0] || 0) + (nextFrame[1] || 0);
-        }
-      }
-      // spare
-      else if ((frame[0] || 0) + (frame[1] || 0) === 10) {
-        totalScore += 10;
-
-        totalScore += nextFrame[0] || 0;
-      } else {
-        totalScore += (frame[0] || 0) + (frame[1] || 0);
-      }
-    }
-
-    return totalScore;
-  };
   return (
-    <div>
+    <div className="scoreboard">
       {players.map((player) => (
-        <div key={player.id} className="player-score">
-          <h3>{capitalizeName(player.name)}</h3>
-          <div className="round-scores">
-            <strong>Rounds:</strong> {renderRoundScores(player.id)}
+        <div key={player.id} className="player-section">
+          <h3>{player.name}</h3>
+          <div className="frames">
+            {scores[player.id].map((_, frameIndex) =>
+              renderFrame(player.id, frameIndex)
+            )}
           </div>
-          <div className="scores-row">
-            {scores[player.id].map((_, frameIndex) => (
-              <div key={frameIndex} className="frame-input">
-                {/* Add the round number */}
-                <div className="round-label">
-                  <strong>R{frameIndex + 1}</strong>
-                </div>
-                <input
-                  type="number"
-                  value={inputScores[player.id]?.[frameIndex]?.[0] || ""}
-                  onChange={(e) =>
-                    handleInputChange(player.id, frameIndex, 0, e.target.value)
-                  }
-                  placeholder={`Roll 1`}
-                  min="0"
-                  max="10"
-                />
-                <input
-                  type="number"
-                  value={inputScores[player.id]?.[frameIndex]?.[1] || ""}
-                  onChange={(e) =>
-                    handleInputChange(player.id, frameIndex, 1, e.target.value)
-                  }
-                  placeholder={`Roll 2`}
-                  min="0"
-                  max="10"
-                  disabled={
-                    inputScores[player.id]?.[frameIndex]?.[0] === "10" // disable the second input field if the first throw is a strike
-                  }
-                />
-                <button
-                  onClick={() => handleSaveScore(player.id, frameIndex)}
-                  disabled={completedRounds[player.id]?.[frameIndex]}
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => handleStrike(player.id, frameIndex)}
-                  disabled={completedRounds[player.id]?.[frameIndex]}
-                >
-                  Strike
-                </button>
-              </div>
-            ))}
+          <div className="player-total">
+            Total: {calculateTotalScore(scores[player.id])}
           </div>
-          <div>
-            <div>Total: {calculateTotalScore(scores[player.id])}</div>
+          <div className="player-average">
+            Three-Game Average: {calculateThreeGameAverage(player.id)}
           </div>
-          <div>Three-Game Average: {calculateThreeGameAverage(player.id)}</div>
         </div>
       ))}
       <button onClick={finalizeGame} className="finalize-game-button">

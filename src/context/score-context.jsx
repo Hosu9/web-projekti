@@ -22,40 +22,10 @@ export const ScoreProvider = ({ children }) => {
   const addFrameScore = (playerId, frameIndex, score) => {
     setScores((prevScores) => {
       const updatedFrames = [...prevScores[playerId]];
+      const frame = updatedFrames[frameIndex] || [];
 
-      // make sure tha the frame is an array
-      if (!Array.isArray(updatedFrames[frameIndex])) {
-        updatedFrames[frameIndex] = [];
-      }
-
-      // adding the rolls to the frames
-      if (
-        updatedFrames[frameIndex].length < 2 ||
-        (frameIndex === 9 && updatedFrames[frameIndex].length < 3)
-      ) {
-        updatedFrames[frameIndex].push(score);
-      }
-
-      // spare bonus
-      if (
-        frameIndex > 0 &&
-        updatedFrames[frameIndex - 1].length === 2 &&
-        updatedFrames[frameIndex - 1].reduce((sum, roll) => sum + roll, 0) ===
-          10
-      ) {
-        // adding the current roll as a bonus points to the previous frame
-        updatedFrames[frameIndex - 1].push(score);
-      }
-
-      // strike bonus
-      if (
-        frameIndex > 1 &&
-        updatedFrames[frameIndex - 2][0] === 10 &&
-        updatedFrames[frameIndex - 2].length < 3
-      ) {
-        // adding the current roll as a bonus points to the frame two frames ago
-        updatedFrames[frameIndex - 2].push(score);
-      }
+      // add the rolls to the frame
+      updatedFrames[frameIndex] = [...frame, score];
 
       return { ...prevScores, [playerId]: updatedFrames };
     });
@@ -72,14 +42,75 @@ export const ScoreProvider = ({ children }) => {
       return resetScores;
     });
   };
+
+  const calculateTotalScore = (frames) => {
+    let totalScore = 0;
+
+    for (let i = 0; i < frames.length; i++) {
+      const frame = frames[i] || [];
+      const nextFrame = frames[i + 1] || [];
+      const frameAfterNext = frames[i + 2] || [];
+
+      // handling the tenth frame
+      if (i === 9) {
+        totalScore += frame[0] || 0; // first roll
+        totalScore += frame[1] || 0; // second roll
+
+        // third roll is only added if the first roll is a strike or the first and second roll are a spare
+        if (frame[0] === 10 || frame[0] + frame[1] === 10) {
+          totalScore += frame[2] || 0; // Third roll
+        }
+
+        // if frame 9 is a strike, add the second roll of frame 10 to it
+        if (frames[8]?.[0] === 10 && frame.length >= 2) {
+          totalScore += frame[1] || 0;
+        }
+        break;
+      }
+
+      // strike logic
+      if (frame[0] === 10) {
+        totalScore += 10;
+
+        // add the next two rolls
+        if (nextFrame[0] === 10) {
+          totalScore += 10 + (frameAfterNext[0] || 0);
+        } else {
+          totalScore += (nextFrame[0] || 0) + (nextFrame[1] || 0);
+        }
+      }
+      // spare logic
+      else if (frame[0] + (frame[1] || 0) === 10) {
+        totalScore += 10;
+
+        // add the first roll of the next frame
+        totalScore += nextFrame[0] || 0;
+      }
+      // open frame logic
+      else {
+        totalScore += (frame[0] || 0) + (frame[1] || 0);
+      }
+    }
+
+    return totalScore;
+  };
+
+  const calculateThreeGameAverage = (playerId) => {
+    const playerScores = gameScores[playerId] || [];
+    if (playerScores.length === 0) return 0;
+
+    const lastThreeGames = playerScores.slice(-3); // Get the last three games
+    const total = lastThreeGames.reduce((sum, score) => sum + score, 0);
+    return (total / lastThreeGames.length).toFixed(2); // Return the average
+  };
+
   const finalizeGame = () => {
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
       for (const player of players) {
-        const totalScore = scores[player.id].reduce(
-          (sum, frame) => sum + frame,
-          0
-        );
+        // calculate the total score for the player
+        const totalScore = calculateTotalScore(scores[player.id]);
+
         updatedGameScores[player.id] = [
           ...(updatedGameScores[player.id] || []),
           totalScore,
@@ -92,12 +123,6 @@ export const ScoreProvider = ({ children }) => {
     resetScores();
   };
 
-  const calculateThreeGameAverage = (playerId) => {
-    const games = gameScores[playerId] || [];
-    const total = games.reduce((sum, game) => sum + game, 0);
-    return games.length > 0 ? (total / games.length).toFixed(2) : 0;
-  };
-
   return (
     <ScoreContext.Provider
       value={{
@@ -108,6 +133,7 @@ export const ScoreProvider = ({ children }) => {
         resetScores, // Add resetScores to the context
         finalizeGame,
         calculateThreeGameAverage,
+        calculateTotalScore,
       }}
     >
       {children}
