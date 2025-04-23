@@ -135,54 +135,113 @@ h1 {
   margin-top: 20px;
   color: rgb(20, 19, 19); /* Ensure text is visible on the background */
 }
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
 
-.player-score {
-  margin-bottom: 20px;
-  padding: 10px;
+.player-section {
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.scores-row {
+.frames {
   display: flex;
   flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.frame-input {
+.frame {
+  flex: 1 1 calc(20% - 15px);
+  min-width: 100px;
+  max-width: 100px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.frame-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.frame-scores {
   display: flex;
-  align-items: center; /* Align input and buttons vertically */
-  gap: 5px; /* Add spacing between input and buttons */
-  margin-right: 10px;
+  justify-content: center;
+  gap: 5px;
   margin-bottom: 10px;
 }
 
-.frame-input input {
-  margin-right: 10px;
-  padding: 5px;
-  width: 70px;
+.roll {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
   text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background-color: #f0f0f0;
 }
 
-.frame-input button {
-  padding: 5px 10px;
+.roll-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.roll-buttons button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background-color: #ff5722;
+  color: white;
   cursor: pointer;
-  background-color: #007bff;
+}
+
+.roll-buttons button:hover {
+  background-color: #ff5722;
+}
+
+.roll-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.player-total,
+.player-average {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.finalize-game-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff5722;
   color: white;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
 }
 
-.frame-input button:hover {
-  background-color: #0056b3;
-}
-
-.frame-input button:last-child {
-  background-color: #28a745; /* Green color for the "Strike" button */
-}
-
-.frame-input button:last-child:hover {
-  background-color: #218838; /* Darker green on hover */
+.frame-total {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
 }
 
 .finalize-game-button {
