@@ -454,3 +454,99 @@ button:disabled {
 .delete-button:hover {
   color: #c9302c;
 }
+
+/* ROUND COUNT MODAL */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.623);
+  backdrop-filter: blur(1px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px;
+}
+
+.modal-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 450px;
+  min-height: 300px;
+  max-height: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  position: relative;
+  font-size: 15px;
+}
+
+.modal-header h2 {
+  margin-top: 60px;
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ee3d37;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  transition: 0.2s;
+  background-color: #c9302c;
+}
+
+.modal-content {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.modal-buttons {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.round-count-buttons button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.round-count-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.round-count-buttons button:hover {
+  background-color: #e64a19;
+  transition: 0.2s;
+}

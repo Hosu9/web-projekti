@@ -1,8 +1,20 @@
 import React, { useState } from "react";
 import { useScore } from "../../../context/score-context.jsx";
 import { FaPencilAlt } from "react-icons/fa";
+import { RoundCountModal } from "./round-count-modal.tsx";
 
 const Scoreboard = () => {
+  // modal state handling
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   const {
     players,
     editPlayerName,
@@ -45,13 +57,18 @@ const Scoreboard = () => {
       setEditingPlayerId(null);
     }
   };
+
   const handleStartGame = () => {
-    const rounds = window.confirm(
-      "Do you want to play 5 rounds? click cancel for 3 rounds."
-    )
-      ? 5
-      : 3;
-    startGame(rounds);
+    if (players.length >= 2) {
+      handleOpenModal();
+    } else {
+      alert("Please add at least 2 players to start the game.");
+    }
+  };
+
+  const setRoundAmount = (round) => {
+    startGame(round);
+    setOpenModal(false);
   };
 
   if (!gameStarted) {
@@ -92,6 +109,15 @@ const Scoreboard = () => {
             </li>
           ))}
         </ul>
+
+        {/* open the round count modal when openModal is set to true */}
+        {openModal && (
+          <RoundCountModal
+            closeModal={handleCloseModal}
+            onConfirm={setRoundAmount}
+          />
+        )}
+
         <button onClick={handleStartGame} className="start-game-button">
           Start Game
         </button>
