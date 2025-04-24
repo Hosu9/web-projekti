@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../../../components/button";
 
 interface Props {
   closeModal: (value: boolean) => void;
@@ -11,9 +12,11 @@ export const RoundCountModal = ({ closeModal, onConfirm }: Props) => {
       <div className="modal-container">
         <div className="modal-header">
           <h2>Select the number of rounds</h2>
-          <button className="close-button" onClick={() => closeModal(false)}>
-            <span className="close-icon">✖</span>
-          </button>
+          <Button
+            onClick={() => closeModal(false)}
+            value="✖"
+            className="close-button"
+          />
         </div>
 
         <div className="modal-content">
@@ -23,9 +26,9 @@ export const RoundCountModal = ({ closeModal, onConfirm }: Props) => {
 
           <div className="modal-buttons">
             <div className="round-count-buttons">
-              <button onClick={() => onConfirm(1)}>1 </button>
-              <button onClick={() => onConfirm(3)}>3 </button>
-              <button onClick={() => onConfirm(5)}>5 </button>
+              <Button onClick={() => onConfirm(1)} value="1" />
+              <Button onClick={() => onConfirm(3)} value="3" />
+              <Button onClick={() => onConfirm(5)} value="5" />
             </div>
           </div>
         </div>
