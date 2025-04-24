@@ -1,16 +1,103 @@
 import React, { useState } from "react";
 import { useScore } from "../../../context/score-context.jsx";
+import { FaPencilAlt } from "react-icons/fa";
 
 const Scoreboard = () => {
   const {
     players,
+    editPlayerName,
+    removePlayer,
     scores,
     addFrameScore,
     finalizeGame,
-    calculateThreeGameAverage,
+    calculateAverage,
     calculateTotalScore,
+    completedRounds,
+    setCompletedRounds,
+    round,
+    gameStarted,
+    startGame,
+    totalRounds,
+    declareWinner,
+    resetGame,
   } = useScore();
-  const [completedRounds, setCompletedRounds] = useState({});
+
+  const [editingPlayerId, setEditingPlayerId] = useState(null);
+  const [newPlayerName, setNewPlayerName] = useState("");
+
+  const handleFinalizeGame = () => {
+    finalizeGame(() => {
+      if (round === totalRounds) {
+        declareWinner();
+        resetGame();
+      }
+    });
+  };
+
+  const handleEditClick = (playerId, currentName) => {
+    setEditingPlayerId(playerId); // edit player name
+    setNewPlayerName(currentName); // fill the field with the current name
+  };
+
+  const handleSaveClick = (playerId) => {
+    if (newPlayerName.trim()) {
+      editPlayerName(playerId, newPlayerName.trim()); // save the new name
+      setEditingPlayerId(null);
+    }
+  };
+  const handleStartGame = () => {
+    const rounds = window.confirm(
+      "Do you want to play 5 rounds? click cancel for 3 rounds."
+    )
+      ? 5
+      : 3;
+    startGame(rounds);
+  };
+
+  if (!gameStarted) {
+    return (
+      <div className="players">
+        <h2>Players</h2>
+        <ul>
+          {players.map((player) => (
+            <li key={player.id}>
+              {editingPlayerId === player.id ? (
+                <>
+                  <input
+                    type="text"
+                    value={newPlayerName}
+                    onChange={(e) => setNewPlayerName(e.target.value)}
+                  />
+                  <button onClick={() => handleSaveClick(player.id)}>
+                    Save
+                  </button>
+                </>
+              ) : (
+                <>
+                  {player.name}
+                  <button
+                    onClick={() => handleEditClick(player.id, player.name)}
+                    className="edit-button"
+                  >
+                    <FaPencilAlt />
+                  </button>
+                  <button
+                    onClick={() => removePlayer(player.id)}
+                    className="delete-button"
+                  >
+                    X
+                  </button>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+        <button onClick={handleStartGame} className="start-game-button">
+          Start Game
+        </button>
+      </div>
+    );
+  }
 
   const handleRoll = (playerId, frameIndex, rollValue) => {
     const frame = scores[playerId][frameIndex] || [];
@@ -25,18 +112,30 @@ const Scoreboard = () => {
     addFrameScore(playerId, frameIndex, rollValue);
 
     // complete the round if the frame is completed
-    setCompletedRounds((prev) => ({
-      ...prev,
-      [playerId]: {
-        ...prev[playerId],
-        [frameIndex]:
-          frameIndex === 9
-            ? frame.length + 1 >= 3 ||
-              (frame[0] !== 10 && frame.length + 1 >= 2)
-            : frame[0] === 10 || frame.length + 1 === 2,
-      },
-    }));
+    setCompletedRounds((prev) => {
+      const updated = {
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [frameIndex]:
+            frameIndex === 9
+              ? frame.length + 1 >= 3 || // if 3 rolls are made in the 10th frame
+                (frame[0] !== 10 && frame.length + 1 >= 2) // if 2 rolls are made and not a strike
+              : rollValue === 10 || // if strike is made
+                frame.length + 1 === 2, // if 2 rolls are made in a frame
+        },
+      };
+      return updated;
+    });
   };
+
+  const areAllFramesCompleted =
+    players.length > 0 &&
+    players.every((player) =>
+      scores[player.id].every(
+        (_, frameIndex) => completedRounds[player.id]?.[frameIndex]
+      )
+    );
 
   const renderFrame = (playerId, frameIndex) => {
     const frames = scores[playerId] || [];
@@ -84,7 +183,9 @@ const Scoreboard = () => {
     <div className="scoreboard">
       {players.map((player) => (
         <div key={player.id} className="player-section">
-          <h3>{player.name}</h3>
+          <h3>
+            {player.name} - Round {round}
+          </h3>
           <div className="frames">
             {scores[player.id].map((_, frameIndex) =>
               renderFrame(player.id, frameIndex)
@@ -94,15 +195,16 @@ const Scoreboard = () => {
             Total: {calculateTotalScore(scores[player.id])}
           </div>
           <div className="player-average">
-            Three-Game Average: {calculateThreeGameAverage(player.id)}
+            Game Average: {calculateAverage(player.id)}
           </div>
         </div>
       ))}
-      <button onClick={finalizeGame} className="finalize-game-button">
-        Finalize Game
-      </button>
+      {areAllFramesCompleted && (
+        <button onClick={handleFinalizeGame} className="finalize-game-button">
+          Finalize Game
+        </button>
+      )}
     </div>
   );
 };
-
 export default Scoreboard;
