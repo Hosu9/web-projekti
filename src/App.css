@@ -463,7 +463,7 @@ button:disabled {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.623);
+  background-color: rgba(0, 0, 0, 0.699);
   backdrop-filter: blur(1px);
   display: flex;
   justify-content: center;
@@ -549,4 +549,39 @@ button:disabled {
 .round-count-buttons button:hover {
   background-color: #e64a19;
   transition: 0.2s;
+}
+
+/* WINNER MODAL */
+
+.winner-text {
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+}
+
+.winner-modal h2 {
+  margin-top: 50px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.winner-content {
+  margin-top: 10px;
+}
+
+.winner-modal {
+  width: 500px;
+  height: 300px;
+}
+
+.return-button button {
+  margin-top: 40px;
+  width: 100px;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
 }

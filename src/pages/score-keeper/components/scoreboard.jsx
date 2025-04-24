@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { useScore } from "../../../context/score-context.jsx";
 import { FaPencilAlt } from "react-icons/fa";
 import { RoundCountModal } from "./round-count-modal.tsx";
+import { WinnerModal } from "./winner-modal";
 
 const Scoreboard = () => {
   // modal state handling
   const [openModal, setOpenModal] = React.useState(false);
+  const [winnerModalOpen, setWinnerModalOpen] = useState(false);
+  const [winnerData, setWinnerData] = useState(null);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -13,6 +16,11 @@ const Scoreboard = () => {
 
   const handleCloseModal = () => {
     setOpenModal(false);
+  };
+
+  const handleCloseWinnerModal = () => {
+    setWinnerModalOpen(false);
+    resetGame();
   };
 
   const {
@@ -40,8 +48,10 @@ const Scoreboard = () => {
   const handleFinalizeGame = () => {
     finalizeGame(() => {
       if (round === totalRounds) {
-        declareWinner();
-        resetGame();
+        const winner = declareWinner();
+        const average = calculateAverage(winner.id);
+        setWinnerData({ ...winner, average });
+        setWinnerModalOpen(true);
       }
     });
   };
@@ -236,6 +246,10 @@ const Scoreboard = () => {
         <button onClick={handleFinalizeGame} className="finalize-game-button">
           Finalize Game
         </button>
+      )}
+
+      {winnerModalOpen && (
+        <WinnerModal closeModal={handleCloseWinnerModal} winner={winnerData} />
       )}
     </div>
   );

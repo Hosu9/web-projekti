@@ -115,9 +115,7 @@ export const ScoreProvider = ({ children }) => {
       player.average > max.average ? player : max
     );
 
-    alert(
-      `The winner is ${winner.name} with an average score of ${winner.average} after ${totalRounds} rounds!`
-    );
+    return winner;
   };
 
   // reset the score keeper game
