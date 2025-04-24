@@ -8,7 +8,7 @@ const PlayerForm = () => {
   const [name, setName] = useState("");
 
   return (
-    <div>
+    <div className="player-form">
       <Input
         type="text"
         value={name}

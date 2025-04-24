@@ -21,10 +21,10 @@ export const FrontPage = () => {
           </p>
 
           <div className="start-catchphrase">
-            <a href="/scoreboard" className="btn btn-primary">
+            <a href="/score-keeper" className="btn btn-primary">
               Start tracking!
             </a>
-            <a href="/scoreboard" className="btn btn-primary">
+            <a href="/score-keeper" className="btn btn-primary">
               <img src={bowlingImage} alt="bowling ball and pins" />
             </a>
           </div>

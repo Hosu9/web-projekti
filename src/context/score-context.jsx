@@ -82,7 +82,6 @@ export const ScoreProvider = ({ children }) => {
   };
 
   const finalizeGame = (callback) => {
-    setWinnerDeclared(false);
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
       for (const player of players) {

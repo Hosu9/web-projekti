@@ -183,19 +183,26 @@ const Scoreboard = () => {
     <div className="scoreboard">
       {players.map((player) => (
         <div key={player.id} className="player-section">
-          <h3>
-            {player.name} - Round {round}
-          </h3>
+          <div className="player-header-container">
+            <div class="player-card-header">
+              <h3>Player {player.name}</h3>
+              <h3>Round {round}</h3>
+            </div>
+          </div>
+
           <div className="frames">
             {scores[player.id].map((_, frameIndex) =>
               renderFrame(player.id, frameIndex)
             )}
           </div>
-          <div className="player-total">
-            Total: {calculateTotalScore(scores[player.id])}
-          </div>
-          <div className="player-average">
-            Game Average: {calculateAverage(player.id)}
+
+          <div className="player-score-container player-header-container">
+            <div className="player-total">
+              Total: {calculateTotalScore(scores[player.id])}
+            </div>
+            <div className="player-average">
+              Game Average: {calculateAverage(player.id)}
+            </div>
           </div>
         </div>
       ))}
