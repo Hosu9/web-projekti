@@ -8,7 +8,7 @@ const PlayerForm = () => {
   const [name, setName] = useState("");
 
   return (
-    <div>
+    <div className="player-form">
       <Input
         type="text"
         value={name}
@@ -17,8 +17,10 @@ const PlayerForm = () => {
       />
       <Button
         onClick={() => {
-          addPlayer(name);
-          setName("");
+          if (name.trim()) {
+            addPlayer(name.trim());
+            setName("");
+          }
         }}
         value="Add Player"
       />
