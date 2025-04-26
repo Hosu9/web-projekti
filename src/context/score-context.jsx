@@ -108,7 +108,7 @@ export const ScoreProvider = ({ children }) => {
   const declareWinner = () => {
     const averages = players.map((player) => {
       const average = calculateAverage(player.id);
-      return { name: player.name, average: parseFloat(average) };
+      return { id: player.id, name: player.name, average: parseFloat(average) };
     });
 
     const winner = averages.reduce((max, player) =>

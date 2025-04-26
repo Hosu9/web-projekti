@@ -49,13 +49,11 @@ const Scoreboard = () => {
     finalizeGame(() => {
       if (round === totalRounds) {
         const winner = declareWinner();
-        const average = calculateAverage(winner.id);
-        setWinnerData({ ...winner, average });
+        setWinnerData(winner);
         setWinnerModalOpen(true);
       }
     });
   };
-
   const handleEditClick = (playerId, currentName) => {
     setEditingPlayerId(playerId); // edit player name
     setNewPlayerName(currentName); // fill the field with the current name
@@ -220,7 +218,7 @@ const Scoreboard = () => {
       {players.map((player) => (
         <div key={player.id} className="player-section">
           <div className="player-header-container">
-            <div class="player-card-header">
+            <div className="player-card-header">
               <h3>Player {player.name}</h3>
               <h3>Round {round}</h3>
             </div>
