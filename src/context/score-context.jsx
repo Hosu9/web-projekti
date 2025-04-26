@@ -83,6 +83,14 @@ export const ScoreProvider = ({ children }) => {
       });
       return resetScores;
     });
+    // reset the completed rounds for each player so that the frames can be filled again
+    setCompletedRounds((prevCompletedRounds) => {
+      const resetCompletedRounds = {};
+      Object.keys(prevCompletedRounds).forEach((playerId) => {
+        resetCompletedRounds[playerId] = Array(10).fill(false);
+      });
+      return resetCompletedRounds;
+    });
   };
 
   const finalizeGame = () => {
