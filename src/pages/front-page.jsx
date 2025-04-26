@@ -13,18 +13,18 @@ export const FrontPage = () => {
           </div>
 
           <p>
-            Here you can keep track of your bowling scores for up to 4 players.
+            Here you can keep track of your bowling scores for two to four
+            players.
             <br /> <br />
-            Monitor your progress, calculate your three-round average score, and
-            compare your resultst with your bowling pals to see who's leading
-            the scoreboard!
+            Monitor your progress, calculate your average score over three or
+            five rounds, and find out who's leading the scores!
           </p>
 
           <div className="start-catchphrase">
-            <a href="/scoreboard" className="btn btn-primary">
+            <a href="/score-keeper" className="btn btn-primary">
               Start tracking!
             </a>
-            <a href="/scoreboard" className="btn btn-primary">
+            <a href="/score-keeper" className="btn btn-primary">
               <img src={bowlingImage} alt="bowling ball and pins" />
             </a>
           </div>
