@@ -26,7 +26,6 @@ export const RoundCountModal = ({ closeModal, onConfirm }: Props) => {
 
           <div className="modal-buttons">
             <div className="round-count-buttons">
-              <Button onClick={() => onConfirm(1)} value="1" />
               <Button onClick={() => onConfirm(3)} value="3" />
               <Button onClick={() => onConfirm(5)} value="5" />
             </div>

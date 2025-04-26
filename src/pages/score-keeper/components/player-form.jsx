@@ -4,7 +4,7 @@ import { Button } from "../../../components/button.jsx";
 import { Input } from "../../../components/input.jsx";
 
 const PlayerForm = () => {
-  const { addPlayer, resetScores } = useScore();
+  const { addPlayer } = useScore();
   const [name, setName] = useState("");
 
   return (
@@ -24,7 +24,6 @@ const PlayerForm = () => {
         }}
         value="Add Player"
       />
-      <Button onClick={() => resetScores()} value="Reset Scores" />
     </div>
   );
 };

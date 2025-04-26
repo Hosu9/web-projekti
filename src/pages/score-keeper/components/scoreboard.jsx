@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useScore } from "../../../context/score-context.jsx";
 import { WinnerModal } from "./winner-modal";
+import { Button } from "../../../components/button.jsx";
 import Frame from "./Frame.jsx";
 import PreGameView from "./pre-game-view.jsx";
 
@@ -10,6 +11,7 @@ const Scoreboard = () => {
   const [winnerData, setWinnerData] = useState(null);
   const [editingPlayerId, setEditingPlayerId] = useState(null);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const { resetScores } = useScore();
 
   const {
     players,
@@ -158,6 +160,12 @@ const Scoreboard = () => {
   // actual game view
   return (
     <div className="scoreboard">
+      <Button
+        onClick={() => resetScores()}
+        value="Reset Scores"
+        className="reset-button"
+      />
+
       {players.map((player) => (
         <div key={player.id} className="player-section">
           <div className="player-header-container">

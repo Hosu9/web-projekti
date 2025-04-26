@@ -59,7 +59,7 @@ const PreGameView = ({
       )}
 
       <button onClick={handleStartGame} className="start-game-button">
-        Start Game
+        Start Tracking
       </button>
     </div>
   );
