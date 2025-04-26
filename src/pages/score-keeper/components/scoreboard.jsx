@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useScore } from "../../../context/score-context.jsx";
 import { FaPencilAlt } from "react-icons/fa";
 import { RoundCountModal } from "./round-count-modal.tsx";
@@ -40,20 +40,24 @@ const Scoreboard = () => {
     totalRounds,
     declareWinner,
     resetGame,
+    gameScores,
   } = useScore();
 
   const [editingPlayerId, setEditingPlayerId] = useState(null);
   const [newPlayerName, setNewPlayerName] = useState("");
 
   const handleFinalizeGame = () => {
-    finalizeGame(() => {
-      if (round === totalRounds) {
-        const winner = declareWinner();
-        setWinnerData(winner);
-        setWinnerModalOpen(true);
-      }
-    });
+    finalizeGame();
   };
+
+  useEffect(() => {
+    if (round > totalRounds) {
+      const winner = declareWinner();
+      setWinnerData(winner);
+      setWinnerModalOpen(true);
+    }
+  }, [gameScores, round, totalRounds, declareWinner]);
+
   const handleEditClick = (playerId, currentName) => {
     setEditingPlayerId(playerId); // edit player name
     setNewPlayerName(currentName); // fill the field with the current name

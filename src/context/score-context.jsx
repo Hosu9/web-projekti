@@ -81,7 +81,7 @@ export const ScoreProvider = ({ children }) => {
     });
   };
 
-  const finalizeGame = (callback) => {
+  const finalizeGame = () => {
     setGameScores((prevGameScores) => {
       const updatedGameScores = { ...prevGameScores };
       for (const player of players) {
@@ -99,16 +99,19 @@ export const ScoreProvider = ({ children }) => {
     resetScores();
     setCompletedRounds({});
     setRounds((prevRounds) => prevRounds + 1);
-
-    if (callback) {
-      setTimeout(callback, 500); // delay to make sure updates are applied
-    }
   };
 
   const declareWinner = () => {
     const averages = players.map((player) => {
-      const average = calculateAverage(player.id);
-      return { id: player.id, name: player.name, average: parseFloat(average) };
+      const scores = gameScores[player.id] || [];
+      const totalScore = scores.reduce((sum, score) => sum + score, 0);
+      const average = scores.length > 0 ? totalScore / scores.length : 0;
+
+      return {
+        id: player.id,
+        name: player.name,
+        average: parseFloat(average.toFixed(2)),
+      };
     });
 
     const winner = averages.reduce((max, player) =>
