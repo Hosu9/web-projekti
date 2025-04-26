@@ -50,10 +50,10 @@ export const calculateTotalScore = (frames) => {
   return totalScore;
 };
 
-export const calculateAverage = (playerScores, totalRounds) => {
-  if (!Array.isArray(playerScores) || playerScores.length === 0) return 0;
+export const calculateAverage = (playerId, gameScores) => {
+  const playerScores = gameScores?.[playerId] || [];
+  if (playerScores.length === 0) return 0;
 
-  const lastNGames = playerScores.slice(-totalRounds);
-  const total = lastNGames.reduce((sum, score) => sum + score, 0);
-  return (total / lastNGames.length).toFixed(2); // Return the average
+  const total = playerScores.reduce((sum, score) => sum + score, 0);
+  return (total / playerScores.length).toFixed(2); // Return the average across all games
 };

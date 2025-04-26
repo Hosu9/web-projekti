@@ -178,7 +178,7 @@ const Scoreboard = () => {
               Total: {calculateTotalScore(scores[player.id])}
             </div>
             <div className="player-average">
-              Game Average: {calculateAverage(player.id)}
+              Game Average: {calculateAverage(player.id, gameScores)}
             </div>
           </div>
         </div>

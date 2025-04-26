@@ -160,6 +160,7 @@ export const ScoreProvider = ({ children }) => {
         round,
         totalRounds,
         gameStarted,
+        gameScores,
         setGameStarted,
         startGame,
         declareWinner,
